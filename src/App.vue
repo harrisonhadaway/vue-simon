@@ -10,13 +10,13 @@
     </div>
 
       <div class="row">
-        <div id="green" class="light col" v-bind:class="{ active: isActive('green') }" v-on:click="captureTap('green')"></div>
-        <div id="red" class="light col" v-bind:class="{ active: isActive('red') }" v-on:click="captureTap('red')"></div>
+        <div id="green" class="light col" v-bind:class="{ 'active': activeGreen }" v-on:click="captureTap('green')"></div>
+        <div id="red" class="light col" v-bind:class="{ 'active': activeRed }" v-on:click="captureTap('red')"></div>
       </div>
 
       <div class="row">
-        <div id="yellow" class="light col" v-bind:class="{ active: isActive('yellow') }" v-on:click="captureTap('yellow')"></div>
-        <div id="blue" class="light col" v-bind:class="{ active: isActive('blue') }" v-on:click="captureTap('blue')"></div>
+        <div id="yellow" class="light col" v-bind:class="{ 'active': activeYellow }" v-on:click="captureTap('yellow')"></div>
+        <div id="blue" class="light col" v-bind:class="{ 'active': activeBlue }" v-on:click="captureTap('blue')"></div>
       </div>
 
     </div>
@@ -39,11 +39,14 @@ export default {
   data () {
     return {
       longest: 0,
-      sequence: [],
+      sequence: ['red', 'green', 'yellow', 'blue'],
       taps: [],
       lights: [ 'red', 'green', 'yellow', 'blue' ],
-      activeItem: '',
-      active: ' '
+      activeGreen: false,
+      activeBlue: false,
+      activeYellow: false,
+      activeRed: false
+      
     }
     
   },
@@ -59,15 +62,16 @@ export default {
 
     isActive: function(litUp) {
       return this.activeItem === litUp;
+
     },
 
     captureTap: function(litUp) {
       this.activeItem = litUp;
-       console.log(litUp);
+       //console.log(litUp);
     },
 
     start: function() {
-      this.sequence = [];
+      //this.sequence = [];
       this.addToSequence();
       this.playSequence();
       //this.sequence;
@@ -82,20 +86,43 @@ export default {
       //console.log(this.lights[index]);
     },
 
-    addToSequence: function(litUp) {
+    addToSequence: function() {
       this.sequence.push(this.chooseRandomLight());
-
-    
     },
 
     playSequence: function() {
+     
+      for (var i=0; i<4; i++) {
+        
+        this.activeYellow=false;
+        this.activeRed=false;
+        this.activeBlue=false;
+        this.activeGreen=false;
 
-    },
+        switch(this.sequence[i]) {
+          case 'red':
+            this.activeRed = true;
+            // setTimeout(function () { activeRed = false }, 500);
+            console.log('red');
+            break;
 
-    startTimer: function() {
+          case 'green':
+            this.activeGreen=true;
+            console.log('green');
+            break;
 
+          case 'blue':
+            this.activeBlue=true;
+            console.log('blue');
+            break;
+
+          case 'yellow':
+            this.activeYellow=true;
+            console.log('yellow');
+              break;
+        }  
+      }
     }
-
   }
 }
 
