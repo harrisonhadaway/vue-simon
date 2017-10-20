@@ -8,7 +8,9 @@
       <div id="status">
         
     </div>
-
+      <div id="youlose">
+        <h2>{{ loser }}</h2>
+      </div>
       <div class="row">
         <div id="green" class="light col" v-bind:class="{ 'active': activeGreen }" v-on:click="captureTap('green')"></div>
         <div id="red" class="light col" v-bind:class="{ 'active': activeRed }" v-on:click="captureTap('red')"></div>
@@ -39,7 +41,7 @@ export default {
   data () {
     return {
       longest: 0,
-      sequence: [],
+      sequence: ['red', 'green', 'yellow', 'blue'],
       taps: [],
       lights: [ 'red', 'green', 'yellow', 'blue' ],
       activeGreen: false,
@@ -47,6 +49,8 @@ export default {
       activeYellow: false,
       activeRed: false,
       litcounter:0,
+      countTaps:0,
+      loser: ""
       
     }
     
@@ -61,32 +65,64 @@ export default {
   },
   methods: {
 
-    isActive: function(litUp) {
-      return this.activeItem === litUp;
+    // isActive: function(litUp) {
+    //   return this.activeItem === litUp;
 
-    },
+    // },
 
-    captureTap: function() {
+    setToFalse : function() {
       setTimeout(function() {
         this.activeYellow=false;
         this.activeRed=false;
         this.activeBlue=false;
         this.activeGreen=false;
-      }.bind(this), 250);
-       switch(arguments[0]) {
-          case "red":
-            this.activeRed = true;
-            break;
-          case "green":
-            this.activeGreen=true;
-            break;
-          case "blue":
-            this.activeBlue=true;
-            break;
-          case "yellow":
-            this.activeYellow=true;
-              break;
-          };
+      }.bind(this), arguments[0]);
+
+    },
+
+    captureTap: function() {
+      this.setToFalse(250);
+      switch(arguments[0]) {
+        case "red":
+          this.activeRed = true;
+        break;
+        case "green":
+          this.activeGreen=true;
+        break;
+        case "blue":
+          this.activeBlue=true;
+        break;
+        case "yellow":
+          this.activeYellow=true;
+        break;
+        };
+      this.taps.push(arguments[0]);
+
+      // logic for processing game 
+
+      //console.log(this.taps[0]);  
+      //console.log(this.sequence);
+      this.compareUserInput();
+      
+    },
+
+    compareUserInput : function() {
+      
+      //co (nsole.log(this.sequence[1]);
+      //for (var i = 0; i < this.sequence.length; i++) {
+        if (this.taps[this.countTaps] == this.sequence[this.countTaps]) {
+          (this.countTaps++);
+          console.log("taps=Sequence");
+        }
+        if (this.countTaps == this.sequence.length) {
+          console.log("Winner");
+        }
+        else {
+          this.loser="Absolutely pathetic!! You are not worthy of the VUEmon!";
+
+        }
+        //console.log(this.countTaps);
+      //}
     },
 
     start: function() {
@@ -97,6 +133,8 @@ export default {
       //this.sequence;
       this.litcounter=0;
       // this.startTime();
+      this.taps=[];
+      this.loser="";
     },
 
     chooseRandomLight: function() {
@@ -108,49 +146,42 @@ export default {
 
     addToSequence: function() {
       this.sequence.push(this.chooseRandomLight());
+            console.log(this.sequence); 
+
     },
 
     playSequence: function() {
-           
-        setTimeout(function () {
-        //console.log(this.sequence[this.litcounter]);
-
-          this.activeYellow=false;
-          this.activeRed=false;
-          this.activeBlue=false;
-          this.activeGreen=false;
-
+      setTimeout(function () {
+        this.activeYellow=false;
+        this.activeRed=false;
+        this.activeBlue=false;
+        this.activeGreen=false;
         switch(this.sequence[this.litcounter]) {
           case "red":
             this.activeRed = true;
-            //console.log('red');
             break;
-
           case "green":
             this.activeGreen=true;
-            //console.log('green');
             break;
-
           case "blue":
             this.activeBlue=true;
-            //console.log('blue');
             break;
-
           case "yellow":
             this.activeYellow=true;
-           // console.log('yellow');
               break;
           };
-          this.litcounter++;
-
-            if (this.litcounter < this.sequence.length) {                  
-               this.playSequence();           
-            }
-          }.bind(this), 500);
-
-        }  
-      }
-    }
+        this.litcounter++;
+        if (this.litcounter < this.sequence.length) {                  
+          this.playSequence();           
+        }
+        else {
+          this.setToFalse(100);
+          console.log("done");
+        }
+      }.bind(this), 100);
+    }  
+  }
+}
   
 
 
