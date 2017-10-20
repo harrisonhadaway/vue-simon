@@ -39,13 +39,14 @@ export default {
   data () {
     return {
       longest: 0,
-      sequence: ['red', 'green', 'yellow', 'blue'],
+      sequence: [],
       taps: [],
       lights: [ 'red', 'green', 'yellow', 'blue' ],
       activeGreen: false,
       activeBlue: false,
       activeYellow: false,
-      activeRed: false
+      activeRed: false,
+      litcounter:0,
       
     }
     
@@ -65,17 +66,36 @@ export default {
 
     },
 
-    captureTap: function(litUp) {
-      this.activeItem = litUp;
-       //console.log(litUp);
+    captureTap: function() {
+      setTimeout(function() {
+        this.activeYellow=false;
+        this.activeRed=false;
+        this.activeBlue=false;
+        this.activeGreen=false;
+      }.bind(this), 250);
+       switch(arguments[0]) {
+          case "red":
+            this.activeRed = true;
+            break;
+          case "green":
+            this.activeGreen=true;
+            break;
+          case "blue":
+            this.activeBlue=true;
+            break;
+          case "yellow":
+            this.activeYellow=true;
+              break;
+          };
     },
 
     start: function() {
       //this.sequence = [];
       this.addToSequence();
       this.playSequence();
+      //console.log(this.sequence[this.litcounter]);
       //this.sequence;
-      
+      this.litcounter=0;
       // this.startTime();
     },
 
@@ -91,40 +111,48 @@ export default {
     },
 
     playSequence: function() {
-     
-      for (var i=0; i<4; i++) {
-        
-        this.activeYellow=false;
-        this.activeRed=false;
-        this.activeBlue=false;
-        this.activeGreen=false;
+           
+        setTimeout(function () {
+        //console.log(this.sequence[this.litcounter]);
 
-        switch(this.sequence[i]) {
-          case 'red':
+          this.activeYellow=false;
+          this.activeRed=false;
+          this.activeBlue=false;
+          this.activeGreen=false;
+
+        switch(this.sequence[this.litcounter]) {
+          case "red":
             this.activeRed = true;
-            // setTimeout(function () { activeRed = false }, 500);
-            console.log('red');
+            //console.log('red');
             break;
 
-          case 'green':
+          case "green":
             this.activeGreen=true;
-            console.log('green');
+            //console.log('green');
             break;
 
-          case 'blue':
+          case "blue":
             this.activeBlue=true;
-            console.log('blue');
+            //console.log('blue');
             break;
 
-          case 'yellow':
+          case "yellow":
             this.activeYellow=true;
-            console.log('yellow');
+           // console.log('yellow');
               break;
+          };
+          this.litcounter++;
+
+            if (this.litcounter < this.sequence.length) {                  
+               this.playSequence();           
+            }
+          }.bind(this), 500);
+
         }  
       }
     }
-  }
-}
+  
+
 
 
 </script>
